@@ -1,0 +1,134 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <!-- Left Column - Profile Card -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white text-center py-4">
+          {% if profile.profile_picture %}
+          <img src="{{ profile.profile_picture.url }}" class="rounded-circle mb-3" width="150" height="150"
+            alt="{{ profile.user.username }}'s profile picture">
+          {% else %}
+          <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3"
+            style="width: 150px; height: 150px;">
+            <i class="fas fa-user fa-4x text-muted"></i>
+          </div>
+          {% endif %}
+          <h3 class="mb-0">{{ profile.user.username }}</h3>
+        </div>
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-skating me-2 text-primary"></i>
+            <div>
+              <h6 class="mb-0">Skating Style</h6>
+              <p class="mb-0 text-muted">{{ profile.get_skating_type_display|default:"Not specified" }}</p>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+            <div>
+              <h6 class="mb-0">Skill Level</h6>
+              <p class="mb-0 text-muted">{{ profile.get_skill_level_display|default:"Not specified" }}</p>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+            <div>
+              <h6 class="mb-0">Location</h6>
+              <p class="mb-0 text-muted">{{ profile.location|default:"Not specified" }}</p>
+            </div>
+          </div>
+
+          {% if is_owner %}
+          <div class="mt-4">
+            <a href="{% url 'profile-update' %}" class="btn btn-outline-primary w-100">
+              <i class="fas fa-edit me-1"></i> Edit Profile
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Bio and Activity -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <!-- Bio Section -->
+          <div class="mb-5">
+            <h4 class="border-bottom pb-2">
+              <i class="fas fa-user-edit me-2"></i> Bio
+            </h4>
+            {% if profile.bio %}
+            <p class="lead">{{ profile.bio }}</p>
+            {% else %}
+            <div class="alert alert-info">
+              No bio yet
+              {% if is_owner %}
+              <div class="mt-2">
+                <a href="{% url 'profile-update' %}" class="btn btn-sm btn-primary">
+                  <i class="fas fa-edit me-1"></i> Add Bio
+                </a>
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          
+          <!-- Stats Section -->
+          <div class="mb-5">
+            <h4 class="border-bottom pb-2">
+              <i class="fas fa-chart-line me-2"></i> Stats
+            </h4>
+            <div class="row text-center">
+              <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ events_attended|default:"0" }}</h5>
+                    <p class="card-text text-muted">Events Attended</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ spots_added|default:"0" }}</h5>
+                    <p class="card-text text-muted">Spots Added</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ years_skating|default:"0" }}</h5>
+                    <p class="card-text text-muted">Years Skating</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Recent Activity -->
+          <div>
+            <h4 class="border-bottom pb-2">
+              <i class="fas fa-history me-2"></i> Recent Activity
+            </h4>
+            {% if recent_activity %}
+            <ul class="list-group list-group-flush">
+              {% for activity in recent_activity %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ activity.get_activity_display }}</span>
+                <small class="text-muted">{{ activity.date|timesince }} ago</small>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <div class="alert alert-info">No recent activity yet</div>
+            {% endif %}
+          </div>
+{% endblock %}

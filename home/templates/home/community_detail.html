@@ -1,0 +1,162 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Community Header Card -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+          <i class="fas fa-{{ community.icon }} fa-4x mb-3 text-primary"></i>
+          <h1 class="mb-3">{{ community.name }} Community</h1>
+          <p class="lead text-muted">{{ community.description }}</p>
+          
+          <!-- Stats Row -->
+          <div class="row g-4 mb-4">
+            <!-- Members Count -->
+            <div class="col-md-6">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                  <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                  <h2>{{ member_count }}</h2>
+                  <p class="text-muted mb-0">Community Members</p>
+                  <a href="{% url 'skater_category' community.slug %}" 
+                     class="btn btn-sm btn-outline-primary mt-3">
+                    View All Members
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Events Count -->
+            <div class="col-md-6">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                  <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                  <h2>{{ upcoming_events|length }}</h2>
+                  <p class="text-muted mb-0">Upcoming Events</p>
+                  <a href="{% url 'event-list' %}?skating_type={{ community.slug }}" 
+                     class="btn btn-sm btn-outline-primary mt-3">
+                    View All Events
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Join/Status Section -->
+          {% if user.is_authenticated %}
+            {% if is_current_community %}
+              <div class="alert alert-success mb-4">
+                <i class="fas fa-check-circle me-2"></i>
+                You're a member of this community
+              </div>
+            {% else %}
+              <div class="d-grid">
+                <a href="{% url 'profile-update' %}?skating_type={{ community.slug }}&next={% url 'community_detail' community.slug %}" 
+                   class="btn btn-primary btn-lg">
+                  <i class="fas fa-user-plus me-2"></i> Join This Community
+                </a>
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="card border-primary mb-4">
+              <div class="card-header bg-primary text-white">
+                <i class="fas fa-info-circle me-2"></i> How to join
+              </div>
+              <div class="card-body">
+                <ol class="mb-4">
+                  <li class="mb-2">Create an account or log in</li>
+                  <li class="mb-2">Update your profile information</li>
+                  <li>Select "{{ community.name }}" as your skating type</li>
+                </ol>
+                <div class="d-grid gap-3">
+                  <a href="{% url 'signup' %}?next={% url 'community_detail' community.slug %}" 
+                     class="btn btn-primary">
+                    Sign Up
+                  </a>
+                  <a href="{% url 'login' %}?next={% url 'community_detail' community.slug %}" 
+                     class="btn btn-outline-primary">
+                    Log In
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Upcoming Events Section -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h3 class="mb-0">
+            <i class="fas fa-calendar-day me-2 text-primary"></i>
+            Upcoming Events
+          </h3>
+        </div>
+        <div class="card-body">
+          {% if upcoming_events %}
+            <div class="list-group">
+              {% for event in upcoming_events %}
+                <a href="{% url 'event-detail' event.pk %}" 
+                   class="list-group-item list-group-item-action">
+                  <div class="d-flex flex-column flex-md-row justify-content-between">
+                    <div class="mb-2 mb-md-0">
+                      <h5 class="mb-1">{{ event.title }}</h5>
+                      <div class="d-flex align-items-center text-muted">
+                        <i class="fas fa-map-marker-alt me-2 small"></i>
+                        <small>{{ event.location }}</small>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row align-items-md-center">
+                      <span class="badge bg-primary mb-2 mb-md-0 me-md-3">
+                        {{ event.date|date:"M d, Y" }}
+                      </span>
+                      <span class="badge bg-secondary">
+                        {{ event.date|time:"H:i" }}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4">
+              <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">No upcoming events</h5>
+              <p>Check back later or create an event!</p>
+              {% if user.is_authenticated and is_current_community %}
+                <a href="{% url 'event-create' %}" class="btn btn-primary">
+                  <i class="fas fa-plus me-2"></i> Create Event
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .list-group-item {
+    transition: all 0.2s ease;
+    border-radius: 8px !important;
+    margin-bottom: 10px;
+  }
+  .list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+  }
+</style>
+{% endblock %}

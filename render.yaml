@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: skaterskenya
+    env: python
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --no-input"
+    startCommand: "gunicorn skaterskenya.wsgi"
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        value: "y4p3u2r4$)iv8b4g-(2l+(wnrxp)4-tfd!buj6yy*w_h3uz!m9"

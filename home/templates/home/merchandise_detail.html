@@ -1,0 +1,131 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Product Image -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <img src="{{ item.image.url }}" class="card-img-top img-fluid" alt="{{ item.title }}" style="max-height: 500px; object-fit: contain;">
+            </div>
+        </div>
+        
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title">{{ item.title }}</h2>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="badge bg-{% if item.condition == 'new' %}success{% else %}warning{% endif %} me-2">
+                            {{ item.get_condition_display }}
+                        </span>
+                        <span class="text-muted">
+                            <i class="fas fa-tag me-1"></i> {{ item.category.name }}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-primary mb-4">KSh {{ item.price }}</h3>
+                    
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Availability</h5>
+                        <p class="card-text">
+                            {% if item.quantity > 5 %}
+                                <span class="text-success"><i class="fas fa-check-circle me-1"></i> In Stock ({{ item.quantity }} available)</span>
+                            {% elif item.quantity > 0 %}
+                                <span class="text-warning"><i class="fas fa-exclamation-circle me-1"></i> Only {{ item.quantity }} left!</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times-circle me-1"></i> Out of Stock</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <!-- Seller Information -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-store me-2"></i> Seller Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>{{ business_name }}</h6>
+                            <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i> {{ location }}</p>
+                            <p class="mb-1"><i class="fas fa-phone me-2"></i> {{ contact }}</p>
+                            {% if item.whatsapp_contact %}
+                            <p class="mb-1">
+                                <i class="fab fa-whatsapp me-2 text-success"></i> 
+                                <a href="https://wa.me/{{ item.whatsapp_contact }}?text=Hi%20{{ business_name|urlencode }}%2C%20I'm%20interested%20in%20your%20{{ item.title|urlencode }}%20(KSh%20{{ item.price }})%20on%20Skaters%20Kenya"
+                                   target="_blank" class="text-decoration-none">
+                                    WhatsApp Available
+                                </a>
+                            </p>
+                            {% endif %}
+                            <p class="mb-3"><i class="fas fa-clock me-2"></i> Member since {{ item.seller.date_joined|date:"M Y" }}</p>
+                            
+                            <div class="d-flex flex-wrap gap-2">
+                                {% if item.whatsapp_contact %}
+                                <a href="https://wa.me/{{ item.whatsapp_contact }}?text=Hi%20{{ business_name|urlencode }}%2C%20I'm%20interested%20in%20your%20{{ item.title|urlencode }}%20(KSh%20{{ item.price }})%20on%20Skaters%20Kenya"
+                                   class="btn btn-success btn-sm" target="_blank">
+                                    <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                                </a>
+                                {% endif %}
+                                <a href="mailto:{{ item.seller.email }}?subject=Inquiry about {{ item.title|urlencode }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-envelope me-1"></i> Email
+                                </a>
+                                <a href="{% url 'profile' item.seller.username %}" class="btn btn-outline-dark btn-sm">
+                                    <i class="fas fa-user me-1"></i> Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                        <a href="{% url 'merchandise_list' %}" class="btn btn-outline-dark">
+                            <i class="fas fa-arrow-left me-2"></i> Back to Marketplace
+                        </a>
+                        {% if item.quantity > 0 and item.whatsapp_contact %}
+                        <a href="https://wa.me/{{ item.whatsapp_contact }}?text=Hi%20{{ business_name|urlencode }}%2C%20I%20want%20to%20buy%20your%20{{ item.title|urlencode }}%20(KSh%20{{ item.price }})%20on%20Skaters%20Kenya"
+                           class="btn btn-success" target="_blank">
+                            <i class="fab fa-whatsapp me-2"></i> Buy Now
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Similar Products -->
+    {% if similar_items %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4 class="mb-4"><i class="fas fa-random me-2"></i> Similar Products</h4>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                {% for similar in similar_items %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{{ similar.image.url }}" class="card-img-top" alt="{{ similar.title }}" style="height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ similar.title|truncatechars:30 }}</h6>
+                            <p class="text-muted small mb-1">{{ similar.category.name }}</p>
+                            <p class="fw-bold mb-0">KSh {{ similar.price }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a href="{% url 'merchandise_detail' similar.id %}" class="btn btn-sm btn-outline-dark w-100">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

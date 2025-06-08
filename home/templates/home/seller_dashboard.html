@@ -1,0 +1,39 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Seller Dashboard</h2>
+        <a href="{% url 'add_merchandise' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Add New Item
+        </a>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for item in merchandise %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="text-muted">{{ item.category.name }} • {{ item.get_condition_display }}</p>
+                    <p class="card-text">{{ item.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0">KSh {{ item.price }}</span>
+                        <span class="badge bg-{% if item.available %}success{% else %}danger{% endif %}">
+                            {% if item.available %}{{ item.quantity }} Available{% else %}Sold Out{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">You haven't added any merchandise yet.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

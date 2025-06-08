@@ -1,0 +1,481 @@
+{% extends 'home/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid py-4 admin-dashboard">
+    <!-- Dashboard Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-0">
+                <i class="fas fa-tachometer-alt text-primary me-2"></i>Admin Dashboard
+            </h1>
+            <p class="text-muted mb-0">Overview of platform activity and metrics</p>
+        </div>
+        <div>
+            <a href="{% url 'custom_admin:index' %}" class="btn btn-dark">
+                <i class="fas fa-cog me-2"></i> Admin Portal
+            </a>
+            <button class="btn btn-outline-secondary ms-2" id="refresh-dashboard">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
+        <!-- Users Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-users text-primary me-2"></i>Users
+                        </h5>
+                        <span class="badge bg-primary-soft">{{ new_users_today }} new</span>
+                    </div>
+                    <h2 class="display-5 fw-bold mb-3">{{ total_users|intcomma }}</h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="progress progress-sm w-100 me-3">
+                            <div class="progress-bar bg-primary" style="width: {{ user_growth_percentage }}%"></div>
+                        </div>
+                        <a href="{% url 'custom_admin:home_user_changelist' %}" class="btn btn-sm btn-link px-0">
+                            View All <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-calendar-check text-success me-2"></i>Events
+                        </h5>
+                        <span class="badge bg-success-soft">{{ upcoming_events }} upcoming</span>
+                    </div>
+                    <h2 class="display-5 fw-bold mb-3">{{ active_events|intcomma }}</h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="progress progress-sm w-100 me-3">
+                            <div class="progress-bar bg-success" style="width: {{ event_attendance_percentage }}%"></div>
+                        </div>
+                        <a href="{% url 'custom_admin:home_event_changelist' %}" class="btn btn-sm btn-link px-0">
+                            View All <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Merchandise Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-shopping-bag text-info me-2"></i>Merchandise
+                        </h5>
+                        <span class="badge bg-info-soft">{{ new_merchandise }} new</span>
+                    </div>
+                    <h2 class="display-5 fw-bold mb-3">{{ total_merchandise|intcomma }}</h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="progress progress-sm w-100 me-3">
+                            <div class="progress-bar bg-info" style="width: {{ merchandise_growth_percentage }}%"></div>
+                        </div>
+                        <a href="{% url 'custom_admin:home_merchandise_changelist' %}" class="btn btn-sm btn-link px-0">
+                            View All <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sellers Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-store text-warning me-2"></i>Sellers
+                        </h5>
+                        <span class="badge bg-warning-soft">{{ verified_sellers }} verified</span>
+                    </div>
+                    <h2 class="display-5 fw-bold mb-3">{{ total_sellers|intcomma }}</h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="progress progress-sm w-100 me-3">
+                            <div class="progress-bar bg-warning" style="width: {{ seller_verification_percentage }}%"></div>
+                        </div>
+                        <a href="{% url 'custom_admin:home_sellerprofile_changelist' %}" class="btn btn-sm btn-link px-0">
+                            View All <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skater Demographics -->
+    <div class="card mb-4">
+        <div class="card-header bg-white border-bottom-0 py-3">
+            <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Skater Demographics</h5>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-4 text-center">
+                <div class="col-md-3 border-end">
+                    <div class="p-3">
+                        <div class="icon-shape icon-lg bg-primary-soft text-primary rounded mb-3">
+                            <i class="fas fa-skating"></i>
+                        </div>
+                        <h3 class="mb-1">{{ skating_types.skateboard|intcomma }}</h3>
+                        <p class="text-muted mb-0">Skateboarders</p>
+                    </div>
+                </div>
+                <div class="col-md-3 border-end">
+                    <div class="p-3">
+                        <div class="icon-shape icon-lg bg-success-soft text-success rounded mb-3">
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                        </div>
+                        <h3 class="mb-1">{{ skating_types.longboard|intcomma }}</h3>
+                        <p class="text-muted mb-0">Longboarders</p>
+                    </div>
+                </div>
+                <div class="col-md-3 border-end">
+                    <div class="p-3">
+                        <div class="icon-shape icon-lg bg-info-soft text-info rounded mb-3">
+                            <i class="fas fa-people-arrows"></i>
+                        </div>
+                        <h3 class="mb-1">{{ skating_types.rollerblade|intcomma }}</h3>
+                        <p class="text-muted mb-0">Rollerbladers</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="icon-shape icon-lg bg-warning-soft text-warning rounded mb-3">
+                            <i class="fas fa-scooter"></i>
+                        </div>
+                        <h3 class="mb-1">{{ skating_types.scooter|intcomma }}</h3>
+                        <p class="text-muted mb-0">Scooter Riders</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="row g-4 mb-4">
+        <!-- Recent Merchandise -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-shopping-bag me-2"></i>Recent Merchandise</h5>
+                        <a href="{% url 'custom_admin:home_merchandise_changelist' %}" class="btn btn-sm btn-outline-secondary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Seller</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in recent_merchandise %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if item.image %}
+                                            <img src="{{ item.image.url }}" class="rounded me-3" width="40" height="40" alt="{{ item.title }}">
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-0">{{ item.title|truncatechars:20 }}</h6>
+                                                <small class="text-muted">{{ item.category.name }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ item.seller.username }}</td>
+                                    <td>KSh {{ item.price }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if item.available %}success{% else %}secondary{% endif %}-soft">
+                                            {% if item.available %}Available{% else %}Sold{% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'custom_admin:home_merchandise_change' item.id %}" 
+                                               class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Upcoming Events</h5>
+                        <a href="{% url 'custom_admin:home_event_changelist' %}" class="btn btn-sm btn-outline-secondary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Attendees</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in upcoming_events_list %}
+                                <tr>
+                                    <td>
+                                        <h6 class="mb-0">{{ event.title|truncatechars:20 }}</h6>
+                                        <small class="text-muted">{{ event.location }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="d-block">{{ event.date|date:"M d" }}</span>
+                                        <small class="text-muted">{{ event.date|time }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if event.event_type == 'COMP' %}danger{% else %}primary{% endif %}-soft">
+                                            {{ event.get_event_type_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2">{{ event.attendees.count }}</span>
+                                            <div class="progress progress-xs flex-grow-1" style="height: 6px;">
+                                                <div class="progress-bar" style="width: {{ event.attendance_percentage }}%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'custom_admin:home_event_change' event.id %}" 
+                                               class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{{ event.get_absolute_url }}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Activity Section -->
+    <div class="row g-4">
+        <!-- Recent Signups -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Recent Signups</h5>
+                        <a href="{% url 'custom_admin:home_user_changelist' %}" class="btn btn-sm btn-outline-secondary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Joined</th>
+                                    <th>Profile</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in recent_users %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if user.profile.profile_picture %}
+                                            <img src="{{ user.profile.profile_picture.url }}" class="rounded-circle me-3" width="40" height="40" alt="{{ user.username }}">
+                                            {% else %}
+                                            <div class="avatar avatar-sm me-3">
+                                                <span class="avatar-title rounded-circle bg-primary text-white">
+                                                    {{ user.username|first|upper }}
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-0">{{ user.username }}</h6>
+                                                <small class="text-muted">{{ user.email }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ user.date_joined|timesince }} ago</td>
+                                    <td>
+                                        {% if user.profile %}
+                                        <span class="badge bg-{% if user.profile.skill_level == 'advanced' %}success{% elif user.profile.skill_level == 'intermediate' %}warning{% else %}secondary{% endif %}-soft">
+                                            {{ user.profile.skating_type|default:"-" }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-light text-dark">No profile</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'custom_admin:home_user_change' user.id %}" 
+                                               class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'profile' user.username %}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Activities -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activities</h5>
+                        <a href="{% url 'custom_admin:home_activity_changelist' %}" class="btn btn-sm btn-outline-secondary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        {% for activity in recent_activities %}
+                        <div class="timeline-item">
+                            <div class="timeline-item-marker">
+                                <div class="timeline-item-marker-indicator bg-{% cycle 'primary' 'success' 'info' 'warning' 'danger' %}"></div>
+                            </div>
+                            <div class="timeline-item-content">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="fw-bold">{{ activity.user.username }}</span>
+                                    <small class="text-muted">{{ activity.date|timesince }} ago</small>
+                                </div>
+                                <p class="mb-0">
+                                    <span class="text-{% cycle 'primary' 'success' 'info' 'warning' 'danger' %}">{{ activity.activity_type|title }}</span> - 
+                                    {{ activity.content|truncatechars:60 }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-dashboard {
+    max-width: 99%;
+}
+.card-hover {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.1);
+}
+.display-5 {
+    font-size: 2.2rem;
+}
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.avatar-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+.timeline {
+    position: relative;
+    padding-left: 1.5rem;
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+.timeline-item-marker {
+    position: absolute;
+    left: -1.5rem;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.25rem;
+}
+.timeline-item-marker-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.timeline-item-content {
+    padding-left: 0.5rem;
+}
+</style>
+
+<script>
+// Refresh dashboard button
+document.getElementById('refresh-dashboard').addEventListener('click', function() {
+    window.location.reload();
+});
+
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <!-- Google Signup -->
+                <div class="card-body text-center border-bottom p-4">
+                    <h2 class="mb-3"><i class="fas fa-skating me-2"></i> Join Skaters Kenya</h2>
+                    <p class="mb-3 text-muted">Start by signing up with Google</p>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-outline-danger w-100 mb-2">
+                        <i class="fab fa-google me-2"></i> Sign Up with Google
+                    </a>
+                    <div class="text-muted mt-3 mb-1">or sign up manually below</div>
+                </div>
+
+                <!-- Manual Signup Form -->
+                <div class="card-body p-4 p-md-5">
+                    {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> Please correct the following:
+                        <ul class="mb-0">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}" 
+                                   required id="id_username" value="{{ form.username.value|default:'' }}">
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control form-control-lg {% if form.email.errors %}is-invalid{% endif %}" 
+                                   id="id_email" value="{{ form.email.value|default:'' }}">
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="id_password1" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" name="password1" class="form-control form-control-lg {% if form.password1.errors %}is-invalid{% endif %}" 
+                                       required id="id_password1">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="id_password1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.password1.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+
+                            <!-- Hidden password requirement checks (still enforced) -->
+                            <div class="password-checks d-none">
+                                <small class="requirement-length text-muted d-block"><i class="fas fa-check-circle me-1 text-success"></i> At least 8 characters</small>
+                                <small class="requirement-digit text-muted d-block"><i class="fas fa-check-circle me-1 text-success"></i> At least 1 digit</small>
+                                <small class="requirement-special text-muted d-block"><i class="fas fa-check-circle me-1 text-success"></i> At least 1 special character</small>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-4">
+                            <label for="id_password2" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <input type="password" name="password2" class="form-control form-control-lg {% if form.password2.errors %}is-invalid{% endif %}" 
+                                       required id="id_password2">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="id_password2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.password2.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Account Type -->
+                        <div class="mb-4">
+                            <label class="form-label">Account Type</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="user_type" id="skater" value="skater" checked>
+                                <label class="btn btn-outline-dark" for="skater"><i class="fas fa-user me-2"></i>Skater</label>
+
+                                <input type="radio" class="btn-check" name="user_type" id="seller" value="seller">
+                                <label class="btn btn-outline-dark" for="seller"><i class="fas fa-store me-2"></i>Seller</label>
+                            </div>
+                        </div>
+
+                        <!-- Terms -->
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+                            </label>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-dark btn-lg rounded-pill py-3">
+                                <i class="fas fa-user-plus me-2"></i> Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer text-center bg-light py-3 rounded-bottom-4">
+                    <p class="mb-0">Already have an account?
+                        <a href="{% url 'login' %}" class="text-dark fw-bold">Log In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Style -->
+<style>
+    .form-control-lg {
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+
+    .btn-group .btn {
+        padding: 10px 0;
+        transition: all 0.3s;
+    }
+
+    .btn-check:checked + .btn {
+        background-color: #212529;
+        color: white;
+    }
+
+    .toggle-password {
+        border-top-right-radius: 8px !important;
+        border-bottom-right-radius: 8px !important;
+    }
+</style>
+
+<!-- Script -->
+<script>
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const target = document.getElementById(this.dataset.target);
+                const icon = this.querySelector('i');
+                if (target.type === 'password') {
+                    target.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    target.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+
+        // Password validation
+        const passwordInput = document.getElementById('id_password1');
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function () {
+                const val = passwordInput.value;
+                document.querySelector('.requirement-length').classList.toggle('text-success', val.length >= 8);
+                document.querySelector('.requirement-digit').classList.toggle('text-success', /\d/.test(val));
+                document.querySelector('.requirement-special').classList.toggle('text-success', /[^A-Za-z0-9]/.test(val));
+            });
+        }
+    })();
+</script>
+{% endblock %}

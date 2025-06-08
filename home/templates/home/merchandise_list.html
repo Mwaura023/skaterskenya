@@ -1,0 +1,84 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-6">
+                            <input type="text" name="q" class="form-control" placeholder="Search products..." 
+                                   value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-4">
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                        {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-dark w-100">
+                                <i class="fas fa-filter me-1"></i> Filter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for item in merchandise %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-tag me-1"></i> {{ item.category.name }} • 
+                        <i class="fas fa-check-circle me-1"></i> {{ item.get_condition_display }}
+                    </p>
+                    <p class="card-text">{{ item.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0">KSh {{ item.price }}</span>
+                        <div class="btn-group">
+                            <a href="{% url 'merchandise_detail' item.id %}" class="btn btn-sm btn-outline-dark">
+                                View Details
+                            </a>
+                            {% if item.whatsapp_contact %}
+                            <a href="https://wa.me/{{ item.whatsapp_contact }}?text=Hi%20{{ item.seller.username|urlencode }}%2C%20I'm%20interested%20in%20your%20{{ item.title|urlencode }}%20(KSh%20{{ item.price }})%20on%20Skaters%20Kenya"
+                               class="btn btn-sm btn-success" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if item.seller.sellerprofile %}
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-store me-1"></i> {{ item.seller.sellerprofile.business_name }}
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle me-2"></i> No products found matching your criteria.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

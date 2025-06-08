@@ -1,0 +1,585 @@
+/* Base Structure & Footer Fix */
+html {
+    height: 100%;
+    position: relative;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 56px; /* For fixed navbar */
+    font-family: 'Roboto', sans-serif;
+}
+
+main {
+    flex: 1;
+    padding: 20px 0 40px; /* Top and bottom padding */
+}
+
+footer {
+    background-color: #80f9f3;
+    color: white;
+    padding: 20px 0;
+    margin-top: auto; /* Pushes footer to bottom */
+    width: 100%;
+}
+
+/* Modern Navbar Styles */
+.skate-navbar {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    padding: 0;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 35px;
+    transition: transform 0.3s ease;
+}
+
+/* Add to your existing CSS */
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=UnifrakturMaguntia&display=swap');
+
+.logo-text {
+    font-family: 'Black Ops One', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    background: linear-gradient(to right, #000, #333);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    margin-left: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Alternative more gothic style */
+/*
+.logo-text {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 1.8rem;
+    color: #000;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+    margin-left: 0.5rem;
+    letter-spacing: 0;
+}
+*/
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+/* Nav Links */
+.nav-link {
+    color: #333 !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link.active {
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    height: 2px;
+    background: #333;
+}
+
+.nav-link:hover {
+    opacity: 0.8;
+}
+
+/* Login Button */
+.login-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    padding: 0.5rem 1.5rem !important;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* User Avatar */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar i {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile Toggle */
+.skate-toggler {
+    border: none;
+    padding: 0.5rem;
+}
+
+.toggler-bar {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #333;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar-toggler[aria-expanded="true"] .toggler-bar:first-child {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.navbar-toggler[aria-expanded="true"] .toggler-bar:last-child {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile View */
+@media (max-width: 991.98px) {
+    .skate-navbar {
+        padding: 0.5rem 0;
+    }
+    
+    #navbarContent {
+        background: white;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 8px 8px;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+    
+    .navbar-nav {
+        padding-top: 0.5rem;
+    }
+    
+    .nav-item {
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-btn {
+        margin: 0.5rem 0 0;
+        display: inline-block;
+        text-align: center;
+    }
+    
+    .user-avatar {
+        margin: 0 auto;
+    }
+    
+    .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        border: none;
+        box-shadow: none;
+    }
+}
+
+
+
+
+
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    z-index: -1;
+}
+
+/* Card & Hover Effects */
+.hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn-outline-primary {
+    border-width: 2px;
+    font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+}
+
+/* Offcanvas Menu */
+.offcanvas {
+    max-width: 75%;
+}
+
+/* Event Detail Page */
+.card-header {
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+}
+
+.badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+.lead {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+/* Attendees Styles */
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.btn i {
+    margin-right: 0.3rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .hero-section p {
+        font-size: 1.1rem;
+    }
+    
+    footer {
+        padding: 15px 0;
+    }
+}
+
+/* Content Wrapper for Short Pages */
+.content-wrapper {
+    min-height: calc(100vh - 56px - 60px); /* viewport - navbar - footer */
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* Profile Page Styles */
+.profile-card {
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.profile-picture {
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat-card {
+    transition: all 0.2s ease;
+    border: none;
+    border-radius: 10px;
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+    background-color: #f8f9fa !important;
+}
+
+.activity-item {
+    transition: background-color 0.2s ease;
+}
+
+.activity-item:hover {
+    background-color: #f8f9fa;
+}
+
+
+
+
+/* Auth Pages Styling */
+.auth-card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.auth-card .card-header {
+    border-bottom: none;
+}
+
+.auth-card .form-control {
+    padding: 12px 15px;
+    border-radius: 8px;
+}
+
+.auth-card .btn {
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.auth-card .form-text {
+    font-size: 0.85rem;
+}
+
+.auth-card a {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.auth-card a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+/* Category Page Styles */
+.skater-card {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.skater-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.profile-picture {
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.category-header {
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+
+
+
+/* Community Hub Styles */
+.community-icon {
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.community-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--bs-primary);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--bs-gray-600);
+}
+
+.community-card {
+    transition: all 0.3s ease;
+}
+
+.community-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+
+
+/* Community Cards */
+.community-card {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .community-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .guide-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid var(--bs-primary);
+  }
+
+
+
+
+  /* Merchandise Card Styles */
+.merchandise-card {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.merchandise-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Category Filter */
+.category-filter {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.category-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover, .category-btn.active {
+    background: #e94546;
+    color: white;
+    border-color: #e94546;
+}
+
+
+
+/* Merchandise card styling */
+.merchandise-card {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.merchandise-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 200px;
+}
+
+/* Filter form styling */
+.filter-form .form-control, 
+.filter-form .form-select {
+    border-radius: 20px;
+    padding: 10px 15px;
+}
+
+.filter-form .btn {
+    border-radius: 20px;
+}
+
+
+
+/* Product Detail Page Styles */
+.product-image-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.seller-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.similar-product-card {
+    transition: all 0.3s ease;
+}
+
+.similar-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.condition-badge {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}

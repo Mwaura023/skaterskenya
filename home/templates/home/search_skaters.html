@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+  <h2>Search Skaters</h2>
+  <form method="get" action="{% url 'search_skaters' %}">
+    <input type="text" name="q" placeholder="Search by name, location, or skating type">
+    <button type="submit">Search</button>
+  </form>
+  {% if skaters %}
+    <ul>
+      {% for skater in skaters %}
+        <li>
+          <a href="{% url 'profile' skater.user.username %}">{{ skater.user.username }}</a>
+          <p>{{ skater.bio }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No skaters found.</p>
+  {% endif %}
+  <p><a href="{% url 'homepage' %}">Back to Home</a></p>
+{% endblock %}

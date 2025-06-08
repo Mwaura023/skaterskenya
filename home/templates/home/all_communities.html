@@ -1,0 +1,71 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-4 fw-bold">All Skating Communities</h1>
+        <a href="{% url 'homepage' %}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-2"></i> Back to Home
+        </a>
+      </div>
+      
+      <div class="row g-4">
+        {% for community in communities %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm community-card">
+            <div class="card-img-top" style="height: 200px; overflow: hidden;">
+              <img src="{% static 'images/' %}{{ community.image }}" 
+                   class="img-fluid w-100 h-100 object-fit-cover" 
+                   alt="{{ community.name }} community">
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-{{ community.icon }} fa-2x text-primary me-3"></i>
+                <h3 class="mb-0">{{ community.name }}</h3>
+              </div>
+              <p class="text-muted mb-3">
+                <i class="fas fa-users me-2"></i>
+                {{ community.member_count }} member{{ community.member_count|pluralize }}
+              </p>
+              <p class="card-text">{{ community.description }}</p>
+            </div>
+            <div class="card-footer bg-white border-0">
+              <a href="{% url 'community_detail' community.slug %}" class="btn btn-primary w-100">
+                {% if user.is_authenticated %}
+                  Explore Community
+                {% else %}
+                  Learn How to Join
+                {% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+          <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle me-2"></i>
+            No communities found
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .community-card {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .community-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+</style>
+{% endblock %}

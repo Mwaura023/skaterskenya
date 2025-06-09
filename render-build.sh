@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-# exit on error
+# render-build.sh
+
+# Exit on error
 set -o errexit
 
-# Install dependencies (already handled by Render with requirements.txt)
+# 1. Install dependencies
+pip install -r requirements.txt
 
-# Run migrations
+# 2. Run migrations
 python manage.py migrate
 
-# (Optional but recommended) collect static files
-python manage.py collectstatic --noinput
+# 3. Collect static files
+python manage.py collectstatic --no-input

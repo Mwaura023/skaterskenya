@@ -16,7 +16,7 @@ SECRET_KEY = 'REDACTED'  # TODO: move to .env in production
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
